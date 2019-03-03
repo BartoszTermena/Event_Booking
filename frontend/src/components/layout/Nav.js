@@ -3,18 +3,26 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import SignedInLinks from './SignedInLinks';
 import SignedOutLinks from './SignedOutLinks';
+import AuthContext from '../../context/auth-context'
 
 const Navbar = (props) => {
     return (
-      <NavWrapper className="navbar navbar-expand-sm navbar-dark px-sm-5">
-      <a className="navbar-brand" href="#">Navbar</a>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-            <SignedOutLinks/>
-        </div>
-      </NavWrapper>
+      <AuthContext.Consumer>
+        {(context) => {
+          const links = context.token ? <SignedInLinks /> : <SignedOutLinks/>;
+          return (
+            <NavWrapper className="navbar navbar-expand-sm navbar-dark px-sm-5">
+              <a className="navbar-brand" href="#">Navbar</a>
+              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+              </button>
+              <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+                  {links}
+              </div>
+          </NavWrapper>
+          )
+        }}
+      </AuthContext.Consumer>
     )
   }
 

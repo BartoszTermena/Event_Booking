@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
+import AuthContext from '../../context/auth-context'
 
 class Auth extends Component {
   state = {
     email: '',
     password: ''
   }
+
+  static contextType = AuthContext;
+
   handleLogIn = (e) => {
     this.setState({
       [e.target.name]: e.target.value
@@ -44,7 +48,13 @@ class Auth extends Component {
       return res.json()
     })
     .then(resData => {
-      console.log(resData)
+      if(resData.data.login.token) {
+        this.context.login(
+          resData.data.login.token, 
+          resData.data.login.userId, 
+          resData.data.login.tokenExpiration
+        )
+      }
     })
     .catch(err => {
       console.log(err)
@@ -68,7 +78,7 @@ class Auth extends Component {
           <div className="form-group">
             <button type="submit" className="btn btn-primary btn-block">Log In  </button>
          </div>
-          <p className="text-center">Have not got an account? <Link to="signup">Sign Up </Link></p>                                                                 
+          <p className="text-center">Do not have an account? <Link to="signup">Sign Up </Link></p>                                                                 
       </form>
     )
   }

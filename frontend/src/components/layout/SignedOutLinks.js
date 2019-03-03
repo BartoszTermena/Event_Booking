@@ -1,12 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import {ButtonContainer} from './Button';
-import styled from 'styled-components'
 
 const SignedInLinks = (props) => {
   return (
     <React.Fragment>
     <ul className="navbar-nav align-items-center ml-auto"> 
+        <li className="nav-item ml-2">
+            <Link to="/events">
+            <ButtonContainer>
+                Events
+            </ButtonContainer>
+          </Link>
+        </li>
         <li className="nav-item ml-2">
             <Link to="signup">
             <ButtonContainer>
