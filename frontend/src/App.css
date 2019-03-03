@@ -7,12 +7,15 @@
   --mainBlue: #3a4660;
 }
 body {
-  ont-family: 'Slabo 27px', serif;
-font-family: 'Cuprum', sans-serif;
-font-family: 'Amiri', serif;
+  margin: 0;
+  padding: 0;
+  font-family: 'Slabo 27px', serif;
+  font-family: 'Cuprum', sans-serif;
+  font-family: 'Amiri', serif;
   background: var(--secondary-color) !important;
   color: var(--mainDark) !important;
   font-size: 2rem !important;
+  text-align: center;
 }
 body::-webkit-scrollbar {
   width: 0.6em;

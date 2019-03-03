@@ -21,7 +21,7 @@ const SignedInLinks = (props) => {
         </Link>
         </li>
         <li className="nav-item ml-2">
-            <ButtonContainer>
+            <ButtonContainer onClick={props.logout}>
                 Log Out
             </ButtonContainer>
         </li>

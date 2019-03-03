@@ -9,7 +9,7 @@ const Navbar = (props) => {
     return (
       <AuthContext.Consumer>
         {(context) => {
-          const links = context.token ? <SignedInLinks /> : <SignedOutLinks/>;
+          const links = context.token ? <SignedInLinks logout={context.logout}/> : <SignedOutLinks/>;
           return (
             <NavWrapper className="navbar navbar-expand-sm navbar-dark px-sm-5">
               <a className="navbar-brand" href="#">Navbar</a>
