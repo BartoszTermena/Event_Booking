@@ -6,6 +6,7 @@ class Auth extends Component {
     email: '',
     password: ''
   }
+
   handleSignUp = (e) => {
     this.setState({
       [e.target.name]: e.target.value

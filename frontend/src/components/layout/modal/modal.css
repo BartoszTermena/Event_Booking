@@ -6,6 +6,7 @@
     left: 5%;
     position: fixed;
     font-size: 1.4rem;
+    z-index: 999;
 }
 
 .modal-header {
