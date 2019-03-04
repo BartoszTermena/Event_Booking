@@ -3,6 +3,7 @@ import {ButtonContainer} from '../layout/Button';
 import Modal from '../layout/modal/Modal'
 import Backdrop from '../layout/modal/Backdrop'
 import AuthContext from '../../context/auth-context'
+import Event from '../layout/Event'
 
 class Events extends Component {
   state = {
@@ -133,7 +134,7 @@ class Events extends Component {
       return res.json()
     })
     .then(resData => {
-      console.log(resData)
+      this.fetchEvents();
     })
     .catch(err => {
       console.log(err)
@@ -149,18 +150,14 @@ class Events extends Component {
   }
   handleNewEvents = (e) => {
     this.setState({
-      [e.target.name]:  e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+      [e.target.name]:  e.target.type === 'number' ? parseInt(e.target.value, 2) : e.target.value
     })
     
   }
   
   render() {
     const eventList = this.state.events.length > 0 ? this.state.events.map(event => ((
-      <ul className="list-group">
-            <li key={event._id} className="list-group-item">
-              {event.title}
-            </li>
-          </ul>
+      <Event key={event._id} event={event} authUserId={this.context.userId}/>
     ))) : 
       <div>Loading...</div>;
     return (
