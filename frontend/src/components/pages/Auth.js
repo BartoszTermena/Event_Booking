@@ -52,6 +52,7 @@ class Auth extends Component {
   };
   render() {
     return (
+      <div className="container">
       <form className="container-fluid py-5" onSubmit={this.submitHandler}>
         <div className="form-group input-group">
           <div className="input-group-prepend">
@@ -70,6 +71,7 @@ class Auth extends Component {
          </div>
           <p className="text-center">Have an account? <Link to="login">Log In </Link></p>                                                                 
       </form>
+      </div>
     )
   }
 }

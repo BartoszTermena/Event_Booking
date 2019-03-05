@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {ButtonContainer} from '../layout/Button';
 import Modal from '../layout/modal/Modal'
+import Spinner from '../layout/spinner/Spinner'
 import Backdrop from '../layout/modal/Backdrop'
 import AuthContext from '../../context/auth-context'
 import Event from '../layout/Event'
@@ -9,11 +10,13 @@ class Events extends Component {
   state = {
     events: [],
     creating: false,
+    selectedEvent: null,
     title: '',
     description: '',
-    price: 0,
+    price: '',
     date: ''
   }
+  isActive = true;
 
   static contextType = AuthContext;
   
@@ -54,9 +57,11 @@ class Events extends Component {
       return res.json()
     })
     .then(resData => {
-      this.setState({
-        events: resData.data.events
-      })
+      if(this.isActive) {
+        this.setState({
+          events: resData.data.events
+        })
+      }
     })
     .catch(err => {
       console.log(err)
@@ -79,7 +84,8 @@ class Events extends Component {
 
   onCancel = () => {
     this.setState({
-      creating: false
+      creating: false,
+      selectedEvent: null
     })
   }
 
@@ -93,7 +99,7 @@ class Events extends Component {
       ) {
         return ;
       }
-
+      
     const requestBody = {
       query: `
         mutation {
@@ -116,7 +122,7 @@ class Events extends Component {
         }
       `
     };
-
+    console.log(price, description, date, title)
     const token = this.context.token;
 
     fetch('http://localhost:5000/graphql', {
@@ -150,21 +156,78 @@ class Events extends Component {
   }
   handleNewEvents = (e) => {
     this.setState({
-      [e.target.name]:  e.target.type === 'number' ? parseInt(e.target.value, 2) : e.target.value
+      [e.target.name]:  e.target.type === 'number' ? parseFloat(e.target.value).toFixed(2) : e.target.value
     })
-    
   }
   
+  onViewDetail = eventId => {
+    this.setState(prevState => {
+      const selectedEvent = prevState.events.find(e => e._id === eventId);
+      return { selectedEvent: selectedEvent};
+    });
+  }
+
+  bookEventHandler = () => {
+    if(!this.context.token) {
+      this.setState({selectedEvent: null})
+      return;
+    }
+    const requestBody = {
+      query: `
+        mutation {
+          bookEvent(eventId: "${this.state.selectedEvent._id}") {
+            _id
+            createdAt
+            updatedAt
+          }
+        }
+      `
+    };
+
+    const token = this.context.token;
+
+    fetch('http://localhost:5000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    .then(res => {
+      if (res.status !== 200 && res.status !== 201) {
+        console.log(res)
+      }
+      return res.json()
+    })
+    .then(resData => {
+      console.log(resData)
+    })
+    .catch(err => {
+      console.log(err)
+    });
+  }
+
+  componentWillUnmount() {
+    this.isActive = false;
+  }
+
   render() {
     const eventList = this.state.events.length > 0 ? this.state.events.map(event => ((
-      <Event key={event._id} event={event} authUserId={this.context.userId}/>
+      <Event key={event._id} 
+      event={event} 
+      authUserId={this.context.userId}
+      onDetail={this.onViewDetail}
+      />
     ))) : 
-      <div>Loading...</div>;
+    <div><Spinner /></div>
+    ;
     return (
       <React.Fragment>
-        {this.state.creating && <Backdrop />}
+        {(this.state.creating || this.state.selectedEvent )&& <Backdrop />}
         {this.state.creating && (
         <Modal 
+        confirmText="Confirm"
         title="Add Event" 
         onConfirm={this.onConfirm} 
         onCancel={this.onCancel} 
@@ -178,13 +241,25 @@ class Events extends Component {
               <input name="price" onChange={this.handleNewEvents} className="form-control" placeholder="Price" type="number"/>
           </div>
           <div className="form-group input-group">
-              <input name="date" onChange={this.handleNewEvents} className="form-control" placeholder="Date" type="date"/>
+              <input name="date" onChange={this.handleNewEvents} className="form-control" placeholder="Date" type="datetime-local"/>
           </div> 
           <div className="form-group input-group">
               <textarea name="description" onChange={this.handleNewEvents} className="form-control" placeholder="Description" type="text"></textarea>
           </div>                                                  
       </form>
         </Modal>)}
+        {this.state.selectedEvent && (
+          <Modal 
+          confirmText={this.context.token ? 'Book' : 'Confirm'}
+          title={this.state.selectedEvent.title} 
+          onConfirm={this.bookEventHandler} 
+          onCancel={this.onCancel} 
+          canCancel 
+          canConfirm>
+            <h3 className="text-left">${this.state.selectedEvent.price} - {new Date(this.state.selectedEvent.date).toLocaleDateString()}</h3>
+            <p className="text-left">{this.state.selectedEvent.description}</p>
+          </Modal>
+        )}
         {this.context.token && (<div className="">
         <p>Share  your own Events!</p>
           <ButtonContainer onClick={this.createEventHandler}>Create Event</ButtonContainer>

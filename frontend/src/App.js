@@ -8,7 +8,6 @@ import BookingsPage from './components/pages/Bookings'
 import Nav from './components/layout/Nav'
 import AuthContext from './context/auth-context'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 

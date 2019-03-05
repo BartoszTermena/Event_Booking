@@ -6,13 +6,15 @@ import './modal.css'
 const Modal = props => {
   return (
     <div className="modal-container">
-      <header className="modal-header">{props.title}</header>
+      <header className="modal-header text-info">{props.title}</header>
       <section className="modal-content-children">
         {props.children}
       </section>
       <section className="modal-actions">
         {props.canCancel && <ButtonContainer onClick={props.onCancel}>Cancel</ButtonContainer>}
-        {props.canConfirm && <ButtonContainer onClick={props.onConfirm}>Confirm</ButtonContainer>}
+        {props.canConfirm && <ButtonContainer onClick={props.onConfirm}>
+          {props.confirmText}
+        </ButtonContainer>}
       </section>
     </div>
   )
