@@ -122,7 +122,6 @@ class Events extends Component {
         }
       `
     };
-    console.log(price, description, date, title)
     const token = this.context.token;
 
     fetch('http://localhost:5000/graphql', {
@@ -174,14 +173,17 @@ class Events extends Component {
     }
     const requestBody = {
       query: `
-        mutation {
-          bookEvent(eventId: "${this.state.selectedEvent._id}") {
+        mutation BookEvent($id: ID!) {
+          bookEvent(eventId: $id) {
             _id
             createdAt
             updatedAt
           }
         }
-      `
+      `,
+      variables: {
+        id: this.state.selectedEvent._id
+      }
     };
 
     const token = this.context.token;

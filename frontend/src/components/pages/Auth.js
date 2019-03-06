@@ -18,16 +18,20 @@ class Auth extends Component {
     
     const requrestBody = {
       query: `
-        mutation {
+        mutation CreateUser($email: String!, $password: String!) {
           createUser(userInput: {
-            email: "${this.state.email}",
-            password: "${this.state.password}"
+            email: $email,
+            password: $password
           }) {
             _id
             email
           }
         }
-      `
+      `,
+      variables: {
+        email: this.state.email,
+        password: this.state.password
+      }
     };
 
     fetch('http://localhost:5000/graphql', {

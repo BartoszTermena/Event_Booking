@@ -21,17 +21,21 @@ class Auth extends Component {
     
     const requrestBody = {
       query: `
-        query {
+        query LoginUser($email: String!, $password: String!) {
           login(
-            email: "${this.state.email}",
-            password: "${this.state.password}"
+            email: $email,
+            password: $password
           ) {
             userId
             token
             tokenExpiration
           }
         }
-      `
+      `,
+      variables: {
+        email: this.state.email,
+        password: this.state.password
+      }
     };
 
     fetch('http://localhost:5000/graphql', {
