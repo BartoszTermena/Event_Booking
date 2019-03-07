@@ -25,6 +25,7 @@ const SignedInLinks = (props) => {
                 Log Out
             </ButtonContainer>
         </li>
+        
     </ul>
     </React.Fragment>
   )
